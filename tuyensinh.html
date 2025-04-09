@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trường Mầm Non Ngôi Sao Xanh</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #d9f3e4, #ffffff);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .content p {
+            margin: 15px auto;
+            max-width: 800px;
+            line-height: 1.8;
+        }
+
+        .images {
+            margin: 30px auto;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .images img {
+            width: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .images img:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background: #f1f1f1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9em;
+            color: #555;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .images img {
+                width: 120px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Hiệu ứng mở */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Trường Mầm Non Ngôi Sao Xanh</h1>
+    </header>
+    <div class="content">
+        <p><strong>Trường Mầm Non Ngôi Sao Xanh tuyển sinh trẻ em từ 18 tháng tuổi đến 6 tuổi.</strong></p>
+        <p>Đây là độ tuổi vàng trong sự phát triển của trẻ, là giai đoạn trẻ bắt đầu hình thành những kỹ năng và kiến thức cơ bản, là nền tảng cho sự phát triển sau này.</p>
+        <p>Trẻ từ 18 tháng tuổi đến 6 tuổi đang trong giai đoạn phát triển thể chất và trí tuệ nhanh chóng. Trẻ học hỏi và khám phá thế giới xung quanh một cách tích cực. Trường Mầm Non Ngôi Sao Xanh với đội ngũ giáo viên giàu kinh nghiệm, tận tâm sẽ giúp trẻ phát triển toàn diện cả về thể chất, trí tuệ, tình cảm và thẩm mỹ.</p>
+    </div>
+    <div class="images">
+        <h2>Các giai đoạn phát triển của trẻ</h2>
+        <img src="giaidoanphattrien.jpg" alt="Giai đoạn trẻ 18 tháng">
+    </div>
+    <footer>
+        © 2025 Trường Mầm Non Ngôi Sao Xanh. All rights reserved.
+    </footer>
+</body>
+</html>

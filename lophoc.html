@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lớp Học Của Bé</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            overflow-x: hidden; /* Ngăn chặn thanh cuộn ngang không cần thiết */
+        }
+
+        header {
+            background-color: #29b6f6; /* Xanh dương tươi sáng cho header */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .class-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .class-card {
+            background-color: white;
+            border-radius: 15px; /* Bo tròn mạnh mẽ */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: calc(33.33% - 40px); /* Khoảng 3 cột trên desktop */
+            min-width: 300px; /* Đảm bảo không quá hẹp */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .class-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .class-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .class-info h2 {
+            color: #1e88e5; /* Xanh dương đậm cho tên lớp */
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .class-info p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .class-info a {
+            display: inline-block;
+            background-color: #4caf50; /* Xanh lá cây cho nút xem thêm */
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .class-info a:hover {
+            background-color: #388e3c;
+        }
+
+        /* Hiệu ứng di chuyển chuột */
+        .cursor {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #29b6f6;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: transform 0.1s ease;
+            z-index: 1000;
+        }
+
+        .cursor-inner {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(41, 182, 246, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            z-index: 1001;
+        }
+
+        a:hover, button:hover, .class-card:hover {
+            cursor: pointer;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .class-card {
+                width: calc(50% - 30px); /* 2 cột trên tablet */
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .class-card {
+                width: 100%; /* 1 cột trên điện thoại */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Chào Mừng Đến Với Lớp Học Của Bé</h1>
+    </header>
+
+    <div class="class-container">
+        <div class="class-card" data-class="tre">
+            <img src="https://via.placeholder.com/400/87CEEB/FFFFFF?Text=Lop%20Tre" alt="Lớp Trẻ">
+            <div class="class-info">
+                <h2>Lớp Trẻ (1-2 tuổi)</h2>
+                <p>Dành cho các bé từ 1 đến 2 tuổi. Chương trình tập trung vào phát triển các giác quan, vận động thô và các kỹ năng xã hội cơ bản.</p>
+                <a href="#lop-tre">Xem Thêm</a>
+            </div>
+        </div>
+
+        <div class="class-card" data-class="be">
+            <img src="https://via.placeholder.com/400/ADD8E6/FFFFFF?Text=Lop%20Be" alt="Lớp Bé">
+            <div class="class-info">
+                <h2>Lớp Bé (2-3 tuổi)</h2>
+                <p>Dành cho các bé từ 2 đến 3 tuổi. Tiếp tục phát triển vận động, ngôn ngữ, nhận thức và kỹ năng tự phục vụ.</p>
+                <a href="#lop-be">Xem Thêm</a>
+            </div>
+        </div>
+
+        <div class="class-card" data-class="nho">
+            <img src="https://via.placeholder.com/400/B0E0E6/FFFFFF?Text=Lop%20Nho" alt="Lớp Nhỡ">
+            <div class="class-info">
+                <h2>Lớp Nhỡ (3-4 tuổi)</h2>
+                <p>Dành cho các bé từ 3 đến 4 tuổi. Chuẩn bị cho giai đoạn mẫu giáo với các hoạt động học tập và vui chơi có tính tương tác cao hơn.</p>
+                <a href="#lop-nho">Xem Thêm</a>
+            </div>
+        </div>
+
+        <div class="class-card" data-class="lon">
+            <img src="https://via.placeholder.com/400/8FBC8F/FFFFFF?Text=Lop%20Lon" alt="Lớp Lớn">
+            <div class="class-info">
+                <h2>Lớp Lớn (4-5 tuổi)</h2>
+                <p>Dành cho các bé từ 4 đến 5 tuổi. Tập trung phát triển toàn diện các kỹ năng cần thiết để bé tự tin bước vào lớp một.</p>
+                <a href="#lop-lon">Xem Thêm</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="cursor"></div>
+    <div class="cursor-inner"></div>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        const cursorInner = document.querySelector('.cursor-inner');
+        const links = document.querySelectorAll('a');
+        const classCards = document.querySelectorAll('.class-card');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.transform = `translate(-50%, -50%) translate(${e.clientX}px, ${e.clientY}px)`;
+            cursorInner.style.transform = `translate(-50%, -50%) translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseover', () => {
+                cursor.classList.add('grow');
+                cursorInner.classList.add('grow-inner');
+            });
+            link.addEventListener('mouseleave', () => {
+                cursor.classList.remove('grow');
+                cursorInner.classList.remove('grow-inner');
+            });
+        });
+
+        classCards.forEach(card => {
+            card.addEventListener('mouseover', () => {
+                cursor.classList.add('grow');
+                cursorInner.classList.add('grow-inner');
+            });
+            card.addEventListener('mouseleave', () => {
+                cursor.classList.remove('grow');
+                cursorInner.classList.remove('grow-inner');
+            });
+        });
+    </script>
+</body>
+</html>
