@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bài viết</title>
+  <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #f0f8ff;
+        color: #33475b;
+        padding: 20px 15px;
+        line-height: 1.7;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    h1 {
+        color: #01579b;
+        margin-bottom: 10px;
+        line-height: 1.3;
+        font-size: 2rem;
+    }
+    .meta {
+        color: #5a7184;
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e3f2fd;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    #content {
+        font-size: 1.1rem;
+        /* --- CSS MỚI ĐỂ SỬA LỖI TRÀN VIỀN --- */
+        overflow-wrap: break-word;
+        word-wrap: break-word; /* Tương thích ngược */
+        word-break: break-word;
+    }
+    #content p { margin-bottom: 1.2em; }
+    #content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 25px auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    #content h2, #content h3 { color: #0277bd; margin-top: 2em; margin-bottom: 0.8em; }
+    #content ul, #content ol { padding-left: 25px; margin-bottom: 1.2em; }
+    
+    /* --- CSS MỚI ĐỂ XỬ LÝ CÁC BẢNG (TABLE) BỊ TRÀN --- */
+    #content table {
+        width: 100% !important; /* Buộc bảng phải vừa với container */
+        max-width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* Giúp các cột co giãn đều hơn */
+    }
+    #content th, #content td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        /* Đảm bảo chữ trong ô cũng tự xuống dòng */
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    /* --- KẾT THÚC CSS MỚI --- */
+
+    .back-link {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 10px 18px;
+        background-color: #e3f2fd;
+        color: #01579b;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    .back-link:hover {
+        background-color: #bbdefb;
+        transform: translateY(-2px);
+    }
+  </style>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 id="title">Đang tải...</h1>
+    <div class="meta">
+        <span id="author"></span>
+        <span id="createdAt"></span>
+    </div>
+    <div id="content"></div>
+    <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSZ7-5mr0ll5EP4BHUKC-InnYcu0Th1Tk",
+      authDomain: "baivietwebngoisaoxanh.firebaseapp.com",
+      projectId: "baivietwebngoisaoxanh",
+      appId: "1:38104930715:web:22c85f0b8462e96d47293e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+
+    function render(d) {
+      document.title = d.title || 'Bài viết';
+      document.getElementById('title').textContent = d.title || '';
+      document.getElementById('content').innerHTML = d.content || '';
+      document.getElementById('author').textContent = "Tác giả: " + (d.authorEmail || 'Admin');
+      
+      if (d.createdAt && d.createdAt.toDate) {
+          const date = d.createdAt.toDate();
+          const formattedDate = `Ngày đăng: ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+          document.getElementById('createdAt').textContent = formattedDate;
+      }
+    }
+
+    if (slug) {
+      db.collection('posts').where("slug", "==", slug).limit(1).get().then(snap => {
+        if (!snap.empty) {
+          render(snap.docs[0].data());
+        } else {
+          document.getElementById('title').textContent = "Bài viết không tồn tại!";
+        }
+      });
+    } else {
+      document.getElementById('title').textContent = "Không có tham số bài viết!";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin — Cài đặt nội dung</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#e3f2fd;padding:20px; color: #33475b;}
+    .card{background:#fff;padding:25px;border-radius:10px;max-width:900px;margin:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+    h2 { color: #01579b; }
+    h3 { color: #0277bd; margin-top: 30px; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
+    p { line-height: 1.5; }
+    label{font-weight:bold;margin-top:15px;display:block; margin-bottom: 5px;}
+    input, textarea{width:100%;padding:10px;margin-top:4px;border:1px solid #b0bec5;border-radius:6px;box-sizing:border-box; transition: border-color 0.3s;}
+    input:focus, textarea:focus { border-color: #0288d1; outline: none; }
+    textarea{min-height:120px;font-family:inherit;font-size:inherit; line-height: 1.5;}
+    .btn{margin-top:20px;padding:10px 16px;border:0;border-radius:6px;cursor:pointer; font-weight: bold; font-size: 1rem;}
+    .btn-primary{background:#0288d1;color:#fff}
+    .btn-primary:hover{background:#0277bd;}
+    .btn-ghost{background:#eceff1; color: #33475b;}
+    .btn-ghost:hover{background:#cfd8dc;}
+    .btn-danger{background:#d32f2f;color:#fff}
+    .btn-danger:hover{background:#c62828;}
+    .btn-success{background:#388e3c;color:#fff}
+    .btn-success:hover{background:#2e7d32;}
+    .hidden{display:none}
+    #status{margin-top:10px;font-size:0.9rem;font-weight:bold;}
+    .card a { color: #0288d1; font-weight: bold; text-decoration: none;}
+    .card a:hover { text-decoration: underline; }
+    
+    /* Slider Management Styles */
+    .slider-section { margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+    .image-upload-area {
+      border: 2px dashed #0288d1; border-radius: 8px; padding: 30px; text-align: center;
+      background: #e3f2fd; margin: 15px 0; cursor: pointer; transition: all 0.3s;
+    }
+    .image-upload-area:hover { background: #bbdefb; }
+    .image-upload-area.dragover { background: #90caf9; border-color: #01579b; }
+    .slider-images-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px; margin-top: 20px;
+    }
+    .slider-image-item {
+      position: relative; background: white; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.3s;
+    }
+    .slider-image-item:hover { transform: translateY(-2px); }
+    .slider-image-item img {
+      width: 100%; height: 150px; object-fit: cover; display: block;
+    }
+    .slider-image-controls {
+      position: absolute; top: 5px; right: 5px; display: flex; gap: 5px;
+    }
+    .slider-image-controls button {
+      background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%;
+      width: 30px; height: 30px; cursor: pointer; font-size: 12px;
+    }
+    .slider-image-info {
+      padding: 10px; font-size: 0.9rem;
+    }
+    .slider-image-info input {
+      width: 100%; padding: 5px; margin-top: 5px; font-size: 0.8rem;
+    }
+    .upload-progress {
+      width: 100%; height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden; margin-top: 10px;
+    }
+    .upload-progress-bar {
+      height: 100%; background: #4caf50; width: 0%; transition: width 0.3s;
+    }
+    .transition-effects {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;
+    }
+    .transition-effects label {
+      display: flex; align-items: center; gap: 5px; margin: 0; font-weight: normal;
+    }
+    .settings-tabs {
+      display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e3f2fd;
+    }
+    .tab-button {
+      padding: 10px 20px; background: none; border: none; cursor: pointer;
+      font-weight: bold; color: #666; border-bottom: 2px solid transparent;
+    }
+    .tab-button.active {
+      color: #0288d1; border-bottom-color: #0288d1;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <!-- Removed Firebase Storage - using static images instead -->
+</head>
+<body>
+  <div class="card">
+    <h2>Cài đặt nội dung trang chủ</h2>
+    <p>Chỉnh sửa nội dung các thông báo và thực đơn tại đây. Sau khi lưu, trang chủ sẽ tự động cập nhật.</p>
+    <p>
+      <a href="admin.html">Quản lý bài viết</a> | 
+      <a href="index.html" target="_blank">Xem trang chủ</a>
+    </p>
+
+    <!-- Login -->
+    <div id="loginBox">
+      <label for="email">Email</label><input id="email" type="email">
+      <label for="password">Mật khẩu</label><input id="password" type="password">
+      <button id="btnLogin" class="btn btn-primary">Đăng nhập</button>
+      <div id="loginMsg" style="color:red;font-size:0.9rem; margin-top: 10px;"></div>
+    </div>
+
+    <!-- Settings Form -->
+    <div id="settingsBox" class="hidden">
+      <!-- Tabs Navigation -->
+      <div class="settings-tabs">
+        <button class="tab-button active" onclick="switchTab('content')">Nội dung trang chủ</button>
+        <button class="tab-button" onclick="switchTab('slider')">Quản lý Slider ảnh</button>
+      </div>
+
+      <!-- Content Settings Tab -->
+      <div id="contentTab" class="tab-content active">
+        <form id="settingsForm">
+          <label for="thongBaoBe">Thông Báo Cho Bé (mỗi thông báo một dòng)</label>
+          <textarea id="thongBaoBe" required placeholder="Ngày hội Bé Vui Chơi: 05/03/2025&#10;Giờ kể chuyện: 10/03/2025"></textarea>
+
+          <label for="thongBaoPhuHuynh">Thông Báo Cho Phụ Huynh (mỗi thông báo một dòng)</label>
+          <textarea id="thongBaoPhuHuynh" required placeholder="Họp phụ huynh: 08/03/2025&#10;Đăng ký hè 2025: 20/03/2025"></textarea>
+
+          <label for="thongBaoChung">Thông Báo Chung</label>
+          <textarea id="thongBaoChung" required rows="3"></textarea>
+          
+          <label for="welcomeMessage">Nội dung Chào mừng (xuống dòng để ngắt câu)</label>
+          <textarea id="welcomeMessage" required rows="3" placeholder="Chào Mừng Quý Phụ Huynh Thăm Quan Website&#10;Chúc những gì tốt đẹp nhất đến với gia đình"></textarea>
+
+          <label for="thucDonText">Văn bản hiển thị của Thực đơn</label>
+          <input id="thucDonText" type="text" required>
+          
+          <label for="thucDonLink">Đường dẫn của Thực đơn (ví dụ: menu.html)</label>
+          <input id="thucDonLink" type="text" required>
+
+          <button class="btn btn-primary" type="submit">Lưu thay đổi nội dung</button>
+        </form>
+      </div>
+
+      <!-- Slider Management Tab -->
+      <div id="sliderTab" class="tab-content">
+        <div class="slider-section">
+          <h3>🖼️ Quản lý Slider ảnh trang chủ</h3>
+          <p>Tải lên và quản lý các ảnh hiển thị trong slider trang chủ. Ảnh sẽ tự động chuyển đổi với hiệu ứng ngẫu nhiên.</p>
+          
+          <!-- Static Image Management Area -->
+          <div class="image-upload-area" id="staticImageArea">
+            <div>
+              <h4>📁 Quản lý ảnh tĩnh (Miễn phí)</h4>
+              <p>Thêm ảnh bằng cách nhập tên file ảnh có sẵn trong thư mục website</p>
+              <!-- Tab 1: Thêm ảnh tĩnh -->
+              <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="text" id="imageNameInput" placeholder="Ví dụ: image1.jpg, image2.jpg..." style="flex: 1;">
+                <button type="button" onclick="addStaticImage()" class="btn btn-primary">Thêm file</button>
+              </div>
+              
+              <!-- Tab 2: Thêm ảnh từ URL -->
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="url" id="imageUrlInput" placeholder="Nhập URL ảnh: https://example.com/image.jpg" style="flex: 1;">
+                <button type="button" onclick="addImageFromUrl()" class="btn btn-primary" style="background: #ff9800;">Thêm URL</button>
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; flex-wrap: wrap;">
+                <button type="button" onclick="addDefaultImages()" class="btn btn-success" style="font-size: 0.9rem;">
+                  🚀 Thêm 5 ảnh mặc định
+                </button>
+                <button type="button" onclick="addMultipleUrls()" class="btn btn-primary" style="font-size: 0.9rem; background: #9c27b0;">
+                  📋 Thêm nhiều URL
+                </button>
+                <button type="button" onclick="clearAllImages()" class="btn btn-danger" style="font-size: 0.9rem;">
+                  🗑️ Xóa tất cả
+                </button>
+              </div>
+              <small style="display: block; margin-top: 10px; color: #666;">
+                💡 Mẹo: Upload ảnh vào thư mục website, sau đó nhập tên file ở đây<br>
+                🎯 Hoặc click "Thêm 5 ảnh mặc định" để sử dụng image1.jpg đến image5.jpg
+              </small>
+            </div>
+          </div>
+
+          <!-- Slider Settings -->
+          <div style="margin: 20px 0;">
+            <label for="sliderInterval">Thời gian chuyển ảnh (giây):</label>
+            <input type="number" id="sliderInterval" min="3" max="30" value="5" style="width: 100px;">
+            
+            <div class="transition-effects">
+              <label><input type="radio" name="transition" value="fade" checked> Fade</label>
+              <label><input type="radio" name="transition" value="slide"> Slide</label>
+              <label><input type="radio" name="transition" value="zoom"> Zoom</label>
+              <label><input type="radio" name="transition" value="flip"> Flip</label>
+              <label><input type="radio" name="transition" value="random"> Ngẫu nhiên</label>
+            </div>
+          </div>
+
+          <!-- Current Images Grid -->
+          <div id="sliderImagesGrid" class="slider-images-grid">
+            <!-- Images will be loaded here -->
+          </div>
+
+          <button class="btn btn-success" onclick="saveSliderSettings()">💾 Lưu cài đặt Slider</button>
+        </div>
+      </div>
+
+      <!-- Logout and Status -->
+      <div style="margin-top: 30px; text-align: center;">
+        <button type="button" id="btnLogout" class="btn btn-ghost">Đăng xuất</button>
+      </div>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSZ7-5mr0ll5EP4BHUKC-InnYcu0Th1Tk",
+      authDomain: "baivietwebngoisaoxanh.firebaseapp.com",
+      projectId: "baivietwebngoisaoxanh",
+      appId: "1:38104930715:web:22c85f0b8462e96d47293e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    // Removed Firebase Storage - using static images instead
+    const contentDocRef = db.collection('site_content').doc('dynamic_content');
+
+    const loginBox = document.getElementById('loginBox');
+    const settingsBox = document.getElementById('settingsBox');
+    const msg = document.getElementById('loginMsg');
+    const statusEl = document.getElementById('status');
+
+    // Auth
+    document.getElementById('btnLogin').onclick = () => auth.signInWithEmailAndPassword(email.value, password.value).catch(e => msg.textContent = e.message);
+    document.getElementById('btnLogout').onclick = () => auth.signOut();
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loginBox.classList.add('hidden');
+        settingsBox.classList.remove('hidden');
+        loadSettings();
+      } else {
+        loginBox.classList.remove('hidden');
+        settingsBox.classList.add('hidden');
+      }
+    });
+    
+    function liToPlainText(html) {
+        if (!html) return '';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = `<ul>${html}</ul>`;
+        const items = tempDiv.querySelectorAll('li');
+        return Array.from(items).map(li => li.textContent).join('\n');
+    }
+
+    function plainTextToLi(text) {
+        if (!text) return '';
+        return text.split('\n')
+                   .map(line => line.trim())
+                   .filter(line => line) 
+                   .map(line => `<li>${line}</li>`)
+                   .join('');
+    }
+
+    async function loadSettings() {
+      try {
+        const doc = await contentDocRef.get();
+        if (doc.exists) {
+          const data = doc.data();
+          document.getElementById('thongBaoBe').value = liToPlainText(data.thongBaoBe);
+          document.getElementById('thongBaoPhuHuynh').value = liToPlainText(data.thongBaoPhuHuynh);
+          document.getElementById('thongBaoChung').value = data.thongBaoChung || '';
+          document.getElementById('welcomeMessage').value = data.welcomeMessage || '';
+          document.getElementById('thucDonText').value = data.thucDonText || '';
+          document.getElementById('thucDonLink').value = data.thucDonLink || '';
+        } else {
+          statusEl.style.color = 'orange';
+          statusEl.textContent = 'Chưa có dữ liệu. Vui lòng điền và lưu lần đầu.';
+        }
+      } catch (error) {
+        statusEl.style.color = 'red';
+        statusEl.textContent = 'Lỗi tải dữ liệu: ' + error.message;
+      }
+    }
+
+    document.getElementById('settingsForm').onsubmit = async e => {
+      e.preventDefault();
+      statusEl.textContent = 'Đang lưu...';
+      statusEl.style.color = 'blue';
+
+      const dataToSave = {
+        thongBaoBe: plainTextToLi(document.getElementById('thongBaoBe').value),
+        thongBaoPhuHuynh: plainTextToLi(document.getElementById('thongBaoPhuHuynh').value),
+        thongBaoChung: document.getElementById('thongBaoChung').value,
+        welcomeMessage: document.getElementById('welcomeMessage').value,
+        thucDonText: document.getElementById('thucDonText').value,
+        thucDonLink: document.getElementById('thucDonLink').value,
+      };
+
+      try {
+        await contentDocRef.set(dataToSave, { merge: true });
+        statusEl.style.color = 'green';
+        statusEl.textContent = '✅ Đã lưu thành công!';
+      } catch (error) {
+        statusEl.style.color = 'red';
+        statusEl.textContent = 'Lỗi khi lưu: ' + error.message;
+      }
+
+      setTimeout(() => statusEl.textContent = '', 4000);
+    };
+
+    // ===== SLIDER MANAGEMENT FUNCTIONS =====
+    
+    let sliderImages = [];
+    let currentUser = null;
+    
+    // Tab switching function
+    function switchTab(tabName) {
+      // Remove active class from all tabs and buttons
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Add active class to selected tab
+      document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+      document.getElementById(tabName + 'Tab').classList.add('active');
+      
+      // Load slider data when switching to slider tab
+      if (tabName === 'slider') {
+        loadSliderImages();
+      }
+    }
+
+    // Initialize slider management when user logs in
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        loginBox.classList.add('hidden');
+        settingsBox.classList.remove('hidden');
+        loadSettings();
+        initializeSliderManagement();
+      } else {
+        loginBox.classList.remove('hidden');
+        settingsBox.classList.add('hidden');
+      }
+    });
+
+    function initializeSliderManagement() {
+      // Static image management - no upload needed
+      console.log('Static image management initialized');
+    }
+
+    // Add static image by filename
+    function addStaticImage() {
+      const imageNameInput = document.getElementById('imageNameInput');
+      const imageName = imageNameInput.value.trim();
+      
+      if (!imageName) {
+        showStatus('❌ Vui lòng nhập tên file ảnh', 'error');
+        return;
+      }
+      
+      // Check if image already exists
+      const existingImage = sliderImages.find(img => img.name === imageName);
+      if (existingImage) {
+        showStatus('❌ Ảnh này đã tồn tại trong danh sách', 'error');
+        return;
+      }
+      
+      // Create image object for static file
+      const imageData = {
+        id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        name: imageName,
+        url: imageName, // Use filename as URL for static images
+        alt: imageName.replace(/\.[^/.]+$/, ""), // Remove extension
+        order: sliderImages.length,
+        createdAt: new Date().toISOString(),
+        size: 0, // Unknown size for static images
+        type: 'static'
+      };
+      
+      sliderImages.push(imageData);
+      imageNameInput.value = ''; // Clear input
+      renderSliderImages();
+      showStatus(`✅ Đã thêm ảnh ${imageName}`, 'success');
+    }
+
+    // Quick add multiple default images
+    function addDefaultImages() {
+      const defaultImages = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg'];
+      let addedCount = 0;
+      
+      defaultImages.forEach(imageName => {
+        // Check if image already exists
+        const existingImage = sliderImages.find(img => img.name === imageName);
+        if (!existingImage) {
+          const imageData = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 9) + '_' + addedCount,
+            name: imageName,
+            url: imageName,
+            alt: imageName.replace(/\.[^/.]+$/, ""),
+            order: sliderImages.length,
+            createdAt: new Date().toISOString(),
+            size: 0,
+            type: 'static'
+          };
+          sliderImages.push(imageData);
+          addedCount++;
+        }
+      });
+      
+      if (addedCount > 0) {
+        renderSliderImages();
+        showStatus(`✅ Đã thêm ${addedCount} ảnh mặc định`, 'success');
+      } else {
+        showStatus('ℹ️ Tất cả ảnh mặc định đã có trong danh sách', 'info');
+      }
+    }
+
+    async function loadSliderImages() {
+      try {
+        const doc = await db.collection('site_content').doc('slider_images').get();
+        if (doc.exists) {
+          const data = doc.data();
+          sliderImages = data.images || [];
+          
+          // Load slider settings
+          document.getElementById('sliderInterval').value = data.interval || 5;
+          if (data.transition) {
+            const transitionRadio = document.querySelector(`input[name="transition"][value="${data.transition}"]`);
+            if (transitionRadio) transitionRadio.checked = true;
+          }
+        } else {
+          sliderImages = [];
+        }
+        renderSliderImages();
+      } catch (error) {
+        showStatus(`❌ Lỗi tải ảnh slider: ${error.message}`, 'error');
+      }
+    }
+
+    function renderSliderImages() {
+      const grid = document.getElementById('sliderImagesGrid');
+      
+      if (sliderImages.length === 0) {
+        grid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">Chưa có ảnh nào. Hãy tải lên ảnh đầu tiên!</p>';
+        return;
+      }
+      
+      grid.innerHTML = sliderImages.map((img, index) => `
+        <div class="slider-image-item" data-id="${img.id}">
+          <img src="${img.url || img.data}" alt="${img.alt}" loading="lazy">
+          <div class="slider-image-controls">
+            <button onclick="moveImage(${index}, -1)" title="Di chuyển lên" ${index === 0 ? 'disabled' : ''}>↑</button>
+            <button onclick="moveImage(${index}, 1)" title="Di chuyển xuống" ${index === sliderImages.length - 1 ? 'disabled' : ''}>↓</button>
+            <button onclick="deleteImage(${index})" title="Xóa ảnh" class="btn-danger">×</button>
+          </div>
+          <div class="slider-image-info">
+            <strong>Ảnh ${index + 1}</strong>
+            <input type="text" value="${img.alt}" onchange="updateImageAlt(${index}, this.value)" placeholder="Mô tả ảnh">
+            <small style="display: block; color: #666; margin-top: 5px;">${(img.size / 1024 / 1024).toFixed(2)} MB</small>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function moveImage(index, direction) {
+      if (direction === -1 && index > 0) {
+        // Move up
+        [sliderImages[index], sliderImages[index - 1]] = [sliderImages[index - 1], sliderImages[index]];
+      } else if (direction === 1 && index < sliderImages.length - 1) {
+        // Move down
+        [sliderImages[index], sliderImages[index + 1]] = [sliderImages[index + 1], sliderImages[index]];
+      }
+      
+      // Update order
+      sliderImages.forEach((img, i) => img.order = i);
+      renderSliderImages();
+    }
+
+    async function deleteImage(index) {
+      if (!confirm('Bạn có chắc muốn xóa ảnh này?')) return;
+      
+      const imageToDelete = sliderImages[index];
+      if (!imageToDelete) return;
+      
+      try {
+        showStatus('🗑️ Đang xóa ảnh...', 'info');
+        
+        // For static images, no need to delete from storage
+        // Just remove from the list
+        
+        // Remove from local array
+        sliderImages.splice(index, 1);
+        
+        // Update order
+        sliderImages.forEach((img, i) => img.order = i);
+        
+        // Refresh display
+        renderSliderImages();
+        showStatus('✅ Đã xóa ảnh thành công', 'success');
+        
+      } catch (error) {
+        showStatus(`❌ Lỗi khi xóa ảnh: ${error.message}`, 'error');
+        console.error('Delete error:', error);
+      }
+    }
+
+    function updateImageAlt(index, newAlt) {
+      if (sliderImages[index]) {
+        sliderImages[index].alt = newAlt;
+      }
+    }
+
+    async function saveSliderSettings() {
+      if (!currentUser) {
+        showStatus('❌ Vui lòng đăng nhập', 'error');
+        return;
+      }
+      
+      try {
+        showStatus('💾 Đang lưu cài đặt slider...', 'info');
+        
+        const interval = parseInt(document.getElementById('sliderInterval').value) || 5;
+        const transition = document.querySelector('input[name="transition"]:checked').value;
+        
+        const sliderData = {
+          images: sliderImages,
+          interval: interval,
+          transition: transition,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        await db.collection('site_content').doc('slider_images').set(sliderData);
+        showStatus('✅ Đã lưu cài đặt slider thành công!', 'success');
+        
+      } catch (error) {
+        showStatus(`❌ Lỗi lưu cài đặt: ${error.message}`, 'error');
+      }
+    }
+
+    function showStatus(message, type = 'info') {
+      statusEl.textContent = message;
+      statusEl.style.color = type === 'success' ? 'green' : type === 'error' ? 'red' : 'blue';
+      
+      if (type !== 'info') {
+        setTimeout(() => statusEl.textContent = '', 4000);
+      }
+    }
+
+    // Clear all images
+    function clearAllImages() {
+      if (!confirm('Bạn có chắc muốn xóa tất cả ảnh trong slider?')) return;
+      
+      sliderImages = [];
+      renderSliderImages();
+      showStatus('✅ Đã xóa tất cả ảnh', 'success');
+    }
+
+    // Add image from URL
+    async function addImageFromUrl() {
+      const imageUrlInput = document.getElementById('imageUrlInput');
+      const imageUrl = imageUrlInput.value.trim();
+      
+      if (!imageUrl) {
+        showStatus('❌ Vui lòng nhập URL ảnh', 'error');
+        return;
+      }
+      
+      // Basic URL validation
+      try {
+        new URL(imageUrl);
+      } catch (e) {
+        showStatus('❌ URL không hợp lệ', 'error');
+        return;
+      }
+      
+      // Check if image already exists
+      const existingImage = sliderImages.find(img => img.url === imageUrl);
+      if (existingImage) {
+        showStatus('❌ URL ảnh này đã tồn tại trong danh sách', 'error');
+        return;
+      }
+      
+      showStatus('🔍 Đang kiểm tra ảnh...', 'info');
+      
+      // Test if URL is a valid image
+      const img = new Image();
+      img.onload = function() {
+        // Extract filename from URL
+        const urlParts = imageUrl.split('/');
+        const filename = urlParts[urlParts.length - 1] || 'image.jpg';
+        const imageName = filename.split('?')[0]; // Remove query parameters
+        
+        // Create image object for URL
+        const imageData = {
+          id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+          name: imageName,
+          url: imageUrl,
+          alt: imageName.replace(/\.[^/.]+$/, ""), // Remove extension
+          order: sliderImages.length,
+          createdAt: new Date().toISOString(),
+          size: 0, // Unknown size for URL images
+          type: 'url'
+        };
+        
+        sliderImages.push(imageData);
+        imageUrlInput.value = ''; // Clear input
+        renderSliderImages();
+        showStatus(`✅ Đã thêm ảnh từ URL: ${imageName}`, 'success');
+      };
+      
+      img.onerror = function() {
+        showStatus('❌ URL không phải là ảnh hợp lệ hoặc không thể truy cập', 'error');
+      };
+      
+      // Set a timeout for the image load test
+      setTimeout(() => {
+        if (!img.complete) {
+          showStatus('❌ Timeout: Không thể tải ảnh từ URL này', 'error');
+        }
+      }, 10000); // 10 second timeout
+      
+      img.src = imageUrl;
+    }
+
+    // Batch add images from URLs (separated by newlines)
+    function addMultipleUrls() {
+      const urls = prompt('Nhập nhiều URL ảnh (mỗi URL một dòng):');
+      if (!urls) return;
+      
+      const urlList = urls.split('\n').map(url => url.trim()).filter(url => url);
+      let addedCount = 0;
+      let errorCount = 0;
+      
+      showStatus(`🔄 Đang xử lý ${urlList.length} URL...`, 'info');
+      
+      urlList.forEach((url, index) => {
+        setTimeout(() => {
+          const img = new Image();
+          img.onload = function() {
+            const urlParts = url.split('/');
+            const filename = urlParts[urlParts.length - 1] || `image${index + 1}.jpg`;
+            const imageName = filename.split('?')[0];
+            
+            // Check if already exists
+            const existingImage = sliderImages.find(img => img.url === url);
+            if (!existingImage) {
+              const imageData = {
+                id: Date.now() + '_' + Math.random().toString(36).substr(2, 9) + '_' + index,
+                name: imageName,
+                url: url,
+                alt: imageName.replace(/\.[^/.]+$/, ""),
+                order: sliderImages.length,
+                createdAt: new Date().toISOString(),
+                size: 0,
+                type: 'url'
+              };
+              sliderImages.push(imageData);
+              addedCount++;
+            }
+            
+            // Update UI after processing all URLs
+            if (index === urlList.length - 1) {
+              renderSliderImages();
+              showStatus(`✅ Đã thêm ${addedCount} ảnh, ${errorCount} lỗi`, addedCount > 0 ? 'success' : 'error');
+            }
+          };
+          
+          img.onerror = function() {
+            errorCount++;
+            if (index === urlList.length - 1) {
+              renderSliderImages();
+              showStatus(`✅ Đã thêm ${addedCount} ảnh, ${errorCount} lỗi`, addedCount > 0 ? 'success' : 'error');
+            }
+          };
+          
+          img.src = url;
+        }, index * 500); // Delay each request by 500ms to avoid overwhelming
+      });
+    }
+
+    // Make functions global for onclick handlers
+    window.switchTab = switchTab;
+    window.moveImage = moveImage;
+    window.deleteImage = deleteImage;
+    window.updateImageAlt = updateImageAlt;
+    window.saveSliderSettings = saveSliderSettings;
+    window.addStaticImage = addStaticImage;
+    window.addDefaultImages = addDefaultImages;
+    window.clearAllImages = clearAllImages;
+    window.addImageFromUrl = addImageFromUrl;
+    window.addMultipleUrls = addMultipleUrls;
+  </script>
+</body>
+</html>

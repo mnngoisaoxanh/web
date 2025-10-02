@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực Đơn Hàng Ngày - Trường Mầm Non Ngôi Sao Xanh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #33475b;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #01579b;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+        .menu-week {
+            margin-bottom: 40px;
+            border: 2px solid #e3f2fd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .week-header {
+            background: linear-gradient(135deg, #29b6f6, #0288d1);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .day-menu {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .day-menu:last-child {
+            border-bottom: none;
+        }
+        .day-name {
+            color: #0277bd;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .day-name::before {
+            content: "📅";
+            margin-right: 8px;
+        }
+        .meal-section {
+            margin-bottom: 15px;
+        }
+        .meal-title {
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .meal-items {
+            padding-left: 20px;
+            color: #555;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #29b6f6, #0288d1);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 182, 246, 0.4);
+        }
+        .note {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .note h3 {
+            color: #f57c00;
+            margin-top: 0;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thực Đơn Hàng Ngày</h1>
+        
+        <div class="note">
+            <h3>📋 Lưu ý quan trọng</h3>
+            <p>• Thực đơn có thể thay đổi tùy theo tình hình thực tế và nguồn cung cấp thực phẩm</p>
+            <p>• Trường cam kết sử dụng thực phẩm sạch, an toàn cho sức khỏe các bé</p>
+            <p>• Phụ huynh có thể liên hệ với giáo viên nếu bé có dị ứng thực phẩm</p>
+        </div>
+
+        <div class="menu-week">
+            <div class="week-header">
+                THỰC ĐƠN TUẦN NÀY
+            </div>
+            
+            <div class="day-menu">
+                <div class="day-name">Thứ Hai</div>
+                <div class="meal-section">
+                    <div class="meal-title">🌅 Bữa sáng (7:30 - 8:30)</div>
+                    <div class="meal-items">Cháo thịt bằm rau củ + Sữa tươi + Bánh quy</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🍽️ Bữa trưa (11:00 - 12:00)</div>
+                    <div class="meal-items">Cơm trắng + Thịt kho tàu + Canh chua cá + Rau luộc</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🥛 Bữa phụ (14:30 - 15:00)</div>
+                    <div class="meal-items">Chè đậu xanh + Bánh bông lan</div>
+                </div>
+            </div>
+
+            <div class="day-menu">
+                <div class="day-name">Thứ Ba</div>
+                <div class="meal-section">
+                    <div class="meal-title">🌅 Bữa sáng (7:30 - 8:30)</div>
+                    <div class="meal-items">Phở gà + Sữa chua + Bánh mì nướng</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🍽️ Bữa trưa (11:00 - 12:00)</div>
+                    <div class="meal-items">Cơm trắng + Cá chiên + Canh rau củ + Đậu phụ sốt cà chua</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🥛 Bữa phụ (14:30 - 15:00)</div>
+                    <div class="meal-items">Sữa đậu nành + Bánh flan</div>
+                </div>
+            </div>
+
+            <div class="day-menu">
+                <div class="day-name">Thứ Tư</div>
+                <div class="meal-section">
+                    <div class="meal-title">🌅 Bữa sáng (7:30 - 8:30)</div>
+                    <div class="meal-items">Bún bò Huế + Sữa tươi + Bánh su kem</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🍽️ Bữa trưa (11:00 - 12:00)</div>
+                    <div class="meal-items">Cơm trắng + Gà nướng + Canh bí đỏ + Rau muống xào</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🥛 Bữa phụ (14:30 - 15:00)</div>
+                    <div class="meal-items">Nước ép trái cây + Bánh cookie</div>
+                </div>
+            </div>
+
+            <div class="day-menu">
+                <div class="day-name">Thứ Năm</div>
+                <div class="meal-section">
+                    <div class="meal-title">🌅 Bữa sáng (7:30 - 8:30)</div>
+                    <div class="meal-items">Cháo cá + Sữa chua + Bánh mì sandwich</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🍽️ Bữa trưa (11:00 - 12:00)</div>
+                    <div class="meal-items">Cơm trắng + Thịt rim mặn + Canh cải + Trứng chiên</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🥛 Bữa phụ (14:30 - 15:00)</div>
+                    <div class="meal-items">Sữa tươi + Bánh donut mini</div>
+                </div>
+            </div>
+
+            <div class="day-menu">
+                <div class="day-name">Thứ Sáu</div>
+                <div class="meal-section">
+                    <div class="meal-title">🌅 Bữa sáng (7:30 - 8:30)</div>
+                    <div class="meal-items">Mì Quảng + Sữa tươi + Bánh tráng nướng</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🍽️ Bữa trưa (11:00 - 12:00)</div>
+                    <div class="meal-items">Cơm trắng + Cá kho + Canh khổ qua + Rau cải luộc</div>
+                </div>
+                <div class="meal-section">
+                    <div class="meal-title">🥛 Bữa phụ (14:30 - 15:00)</div>
+                    <div class="meal-items">Chè bưởi + Bánh biscuit</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+        </div>
+    </div>
+</body>
+</html>

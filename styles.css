@@ -1,6 +1,3 @@
-
-/* Reset và style cơ bản */
-/* Font Anton */
 @font-face {
   font-family: 'Anton';
   font-style: normal;
@@ -27,33 +24,27 @@
 
 /* Hiệu ứng cho header */
 @keyframes textGradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .header-text h1 {
     font-family: 'Anton', sans-serif;
     font-size: 1.6rem;
     text-transform: uppercase;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #ffa07a);
+    background: linear-gradient(45deg, #4fc3f7, #81d4fa, #29b6f6, #b3e5fc);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: textGradient 10s ease infinite;
     letter-spacing: 1px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
 }
 
 .header-text h2 {
     font-family: 'Anton', sans-serif;
-    color: #333;
+    color: #01579b; /* Màu xanh đậm */
     letter-spacing: 0.5px;
     text-transform: uppercase;
     position: relative;
@@ -67,7 +58,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(45deg, #4fc3f7, #81d4fa);
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.5s ease;
@@ -78,15 +69,6 @@
     transform-origin: left;
 }
 
-@media (max-width: 480px) {
-    .header-text h1 {
-        font-size: 1.2rem;
-    }
-    
-    .header-text h2 {
-        font-size: 1rem;
-    }
-}
 * {
     margin: 0;
     padding: 0;
@@ -95,11 +77,63 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0f8ff; /* Nền xanh da trời rất nhạt */
+    color: #33475b; /* Màu chữ chính - xanh đậm xám */
     line-height: 1.6;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+}
+
+/* Nút Hamburger */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    width: 45px;
+    height: 45px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #33475b;
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+    border-radius: 2px;
+}
+
+/* Animation cho nút hamburger khi active */
+.menu-toggle.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+/* Lớp phủ (overlay) */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.is-open {
+    display: block;
+    opacity: 1;
 }
 
 /* Header */
@@ -113,12 +147,12 @@ header {
     gap: 1rem;
     flex-wrap: wrap;
     background-image: url('header-background.jpg');
-    background-size: 100% 100%; /* Thay đổi từ 100% auto sang cover */
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
     padding: 2rem;
-    border-radius: 5px;
-    min-height: 150px; /* Thêm chiều cao tối thiểu */
+    border-radius: 8px;
+    min-height: 150px;
 }
 
 .logo {
@@ -126,14 +160,13 @@ header {
 }
 
 .header-text {
-    color: #333;
     text-align: left;
 }
 
 .header-text h1 {
     font-size: 1.4rem;
     font-weight: bold;
-    white-space: nowrap; /* Ngăn chữ xuống dòng */
+    white-space: nowrap;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
 }
@@ -142,34 +175,35 @@ header {
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
-    color: #4682b4;
+    color: #0277bd;
 }
 
 .header-text p {
     font-size: 0.9rem;
-    color: #d87cf7;
+    color: #01579b;
 }
 
 .header-text a {
-    color: #0f1ef2;
+    color: #0288d1;
     text-decoration: none;
+    font-weight: bold;
 }
 
 /* Menu */
 .menu {
-    background-color: #ffd700;
+    background-color: #bbdefb;
     padding: 1rem;
     margin-top: 1rem;
-    border-radius: 5px;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .menu-item {
-    color: #333;
+    color: white;
     text-decoration: none;
     padding: 0.6rem 1.2rem;
     border-radius: 20px;
@@ -183,28 +217,30 @@ header {
 .menu-item:hover {
     transform: translateY(-2px);
     color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Màu riêng cho từng menu-item */
-.menu-item:nth-child(1) { background-color: #ff6347; }
-.menu-item:nth-child(2) { background-color: #4682b4; }
-.menu-item:nth-child(3) { background-color: #32cd32; }
-.menu-item:nth-child(4) { background-color: #ff4500; }
-.menu-item:nth-child(5) { background-color: #9370db; }
-.menu-item:nth-child(6) { background-color: #ffa500; }
+/* --- THAY ĐỔI: MÀU ĐẬM HƠN CHO CÁC NÚT MENU --- */
+.menu-item:nth-child(1) { background-color: #55b3e0; } /* Baby Blue đậm */
+.menu-item:nth-child(2) { background-color: #70db70; } /* Mint Green đậm */
+.menu-item:nth-child(3) { background-color: #f2e088; color: #444;} /* Lemon Chiffon đậm */
+.menu-item:nth-child(4) { background-color: #f99aaa; } /* Light Pink đậm */
+.menu-item:nth-child(5) { background-color: #c9c9f0; color: #444;} /* Lavender đậm */
+.menu-item:nth-child(6) { background-color: #eec082; color: #444;} /* Navajo White đậm */
 
-.menu-item:nth-child(1):hover { background-color: #e5533d; }
-.menu-item:nth-child(2):hover { background-color: #3d75a3; }
-.menu-item:nth-child(3):hover { background-color: #2cb32c; }
-.menu-item:nth-child(4):hover { background-color: #e63e00; }
-.menu-item:nth-child(5):hover { background-color: #8562c9; }
-.menu-item:nth-child(6):hover { background-color: #e69500; }
+.menu-item:nth-child(1):hover { background-color: #4ba3d1; }
+.menu-item:nth-child(2):hover { background-color: #60c460; }
+.menu-item:nth-child(3):hover { background-color: #e5d378; }
+.menu-item:nth-child(4):hover { background-color: #e88998; }
+.menu-item:nth-child(5):hover { background-color: #b8b8e0; }
+.menu-item:nth-child(6):hover { background-color: #dcb070; }
+/* --- KẾT THÚC THAY ĐỔI --- */
+
 
 /* Hiệu ứng ripple */
 .menu-item .ripple {
     position: absolute;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 50%;
     width: 100px;
     height: 100px;
@@ -213,12 +249,7 @@ header {
     pointer-events: none;
 }
 
-@keyframes ripple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
 /* Main */
 main {
@@ -237,36 +268,30 @@ main {
 }
 
 .notification {
-    background-color: #98fb98;
+    background-color: #ffffff; /* Nền trắng */
     padding: 1rem;
     margin-bottom: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #89cff0; /* Viền trái xanh baby blue */
 }
 
 .notification h3 {
     font-size: 1.1rem;
-    color: #333;
+    color: #01579b;
     margin-bottom: 0.5rem;
 }
 
 .notification p, .notification ul {
     font-size: 0.9rem;
-    color: #666;
+    color: #33475b;
 }
 
-.notification ul {
-    list-style: none;
-}
-
-.notification li {
-    margin: 0.3rem 0;
-}
+.notification ul { list-style: none; }
+.notification li { margin: 0.3rem 0; }
 
 /* Content */
-.content {
-    width: 75%;
-}
+.content { width: 75%; }
 
 /* Image Slider */
 .image-slider {
@@ -274,94 +299,49 @@ main {
     position: relative;
     aspect-ratio: 3 / 2;
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
 }
 
 .main-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: none;
+    width: 100%; height: 100%; object-fit: cover;
+    position: absolute; top: 0; left: 0; display: none;
 }
-
-.main-image.active {
-    display: block;
-}
+.main-image.active { display: block; }
 
 .slider-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border-radius: 50%;
-    z-index: 1;
-    transition: background-color 0.3s ease;
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4); color: white; border: none;
+    padding: 0.5rem 1rem; font-size: 1.2rem; cursor: pointer;
+    border-radius: 50%; z-index: 1; transition: background-color 0.3s ease;
 }
-
-.slider-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.prev {
-    left: 1rem;
-}
-
-.next {
-    right: 1rem;
-}
+.slider-button:hover { background-color: rgba(0, 0, 0, 0.7); }
+.prev { left: 1rem; }
+.next { right: 1rem; }
 
 /* Slider Dots */
 .slider-dots {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    gap: 5px;
-    z-index: 2;
+    position: absolute; top: 10px; right: 10px;
+    display: flex; gap: 5px; z-index: 2;
 }
-
 .dot {
-    width: 12px;
-    height: 12px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
+    width: 12px; height: 12px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none; border-radius: 50%; cursor: pointer;
     transition: background-color 0.3s ease;
 }
-
-.dot.active {
-    background-color: rgba(255, 255, 255, 1);
-}
-
-.dot:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-}
+.dot.active { background-color: white; }
+.dot:hover { background-color: rgba(255, 255, 255, 0.9); }
 
 /* Post Titles */
 .post-titles {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
+    background-color: #fff; padding: 1.5rem; border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 1.5rem;
 }
 
 .post-titles h2 {
-    color: #ff6347;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 1rem;
-    border-bottom: 2px dashed #ffd700;
+    color: #0277bd; font-size: 1.5rem; text-align: center;
+    margin-bottom: 1rem; border-bottom: 2px dashed #b3e5fc;
 }
 
 .post-title-container {
@@ -371,233 +351,158 @@ main {
 }
 
 .post-title-item {
-    background: #f0f8ff;
-    padding: 0.8rem;
-    border-radius: 5px;
-    border-left: 4px solid #4682b4;
-    transition: all 0.3s ease;
+    background: #f0f8ff; padding: 0.8rem; border-radius: 5px;
+    border-left: 4px solid #89cff0; transition: all 0.3s ease;
 }
 
 .post-title-item:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
 }
 
 .post-date {
-    display: block;
-    font-size: 0.8rem;
-    color: #666;
-    margin-bottom: 0.3rem;
+    display: block; font-size: 0.8rem;
+    color: #5a7184; margin-bottom: 0.3rem;
 }
 
 .post-title-item a {
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
+    color: #01579b; text-decoration: none; font-weight: bold;
 }
 
 /* Posts */
 .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    display: flex; flex-direction: column;
+    gap: 1rem; margin-bottom: 1.5rem;
 }
 
 .post {
-    background-color: #f0f8ff;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #e3f2fd; padding: 1rem; border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.post h3 {
-    color: #333;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
+.post h3 { color: #0277bd; font-size: 1.2rem; margin-bottom: 0.5rem; }
+.post p { color: #33475b; font-size: 0.9rem; }
 
-.post p {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-//* Event Section */
+/* Event Section */
 .event-section {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    min-height: 100px; /* Đảm bảo chiều cao tối thiểu */
+    display: flex; gap: 1rem;
+    margin-bottom: 1.5rem; min-height: 100px;
 }
 
 .event-item {
-    flex: 1;
-    background-color: #ff6347;
-    color: white;
-    padding: 1rem;
-    border-radius: 5px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100px; /* Chiều cao cố định */
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+    flex: 1; background-color: #89cff0; color: white;
+    padding: 1rem; border-radius: 8px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
+    height: 100px; box-sizing: border-box;
 }
 
-.event-item.welcome {
-    /* Đảm bảo không có CSS riêng làm thay đổi kích thước */
-}
-
-.event-item.welcome h2 {
-    font-size: 1.2rem;
-    margin: 0;
-    padding: 0;
-    line-height: 1.5;
-}
-
-.event-item.menu {
-    /* Đảm bảo không có CSS riêng làm thay đổi kích thước */
-}
-
+.event-item.welcome h2 { font-size: 1.2rem; margin: 0; padding: 0; line-height: 1.5; }
 .menu-link {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin: 0;
-    padding: 0;
-    line-height: 1.5;
+    color: white; text-decoration: none; font-weight: bold;
+    font-size: 1.2rem; margin: 0; padding: 0; line-height: 1.5;
 }
 
 /* Footer */
 footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 1rem;
+    background-color: #01579b; /* Nền footer xanh đậm */
+    color: white; text-align: center; padding: 1rem;
 }
 
 @keyframes fadeInSlide {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.header-container {
-    animation: fadeInSlide 1s ease-out;
-}
-
-.header-text h1 {
-    animation: fadeInSlide 1.2s ease-out;
-}
-
-.header-text h2 {
-    animation: fadeInSlide 1.4s ease-out;
-}
-
-.header-text p {
-    animation: fadeInSlide 1.6s ease-out;
-}
+.header-container { animation: fadeInSlide 1s ease-out; }
+.header-text h1 { animation: fadeInSlide 1.2s ease-out; }
+.header-text h2 { animation: fadeInSlide 1.4s ease-out; }
+.header-text p { animation: fadeInSlide 1.6s ease-out; }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    main {
-        flex-direction: column;
-    }
-
-    .sidebar, .content {
-        width: 100%;
-    }
-
-    .sidebar {
-        position: static;
-    }
-
-    .header-container {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
+    .menu-toggle { display: block; }
     .menu {
-        flex-direction: column;
-        align-items: center;
+        position: fixed; top: 0; left: 0; width: 280px; height: 100%;
+        background-color: #f0f8ff; z-index: 999; flex-direction: column;
+        justify-content: flex-start; align-items: stretch; padding: 80px 0 20px 0;
+        margin-top: 0; border-radius: 0; transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out; box-shadow: none;
     }
-
+    .menu.is-open {
+        transform: translateX(0); box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+    }
     .menu-item {
-        width: 80%;
+        width: 100%; border-radius: 0; color: #33475b !important;
+        font-size: 1rem; padding: 15px 25px; border-bottom: 1px solid #d8e6f1;
+        background-color: transparent !important; text-align: left; margin: 0;
     }
-
-    .image-slider {
-        aspect-ratio: 16 / 9;
+    .menu-item:hover {
+        transform: none; color: white !important; box-shadow: none;
     }
+    .menu-item:nth-child(1):hover { background-color: #55b3e0 !important; }
+    .menu-item:nth-child(2):hover { background-color: #70db70 !important; }
+    .menu-item:nth-child(3):hover { background-color: #f2e088 !important; color: #444 !important; }
+    .menu-item:nth-child(4):hover { background-color: #f99aaa !important; }
+    .menu-item:nth-child(5):hover { background-color: #c9c9f0 !important; color: #444 !important; }
+    .menu-item:nth-child(6):hover { background-color: #eec082 !important; color: #444 !important; }
 
-    .slider-button {
-        padding: 0.4rem 0.8rem;
-        font-size: 1rem;
+    main { flex-direction: column; }
+    .sidebar, .content { width: 100%; }
+    .sidebar { position: static; }
+    .header-container {
+        flex-direction: column; gap: 0.5rem; min-height: 180px; padding: 1.5rem;
     }
-
-    .post-title-container {
-        grid-template-columns: 1fr;
+    .image-slider { aspect-ratio: 16 / 9; }
+    .slider-button { padding: 0.4rem 0.8rem; font-size: 1rem; }
+    .post-title-container { grid-template-columns: 1fr; }
+    .event-section { flex-direction: column; gap: 0.5rem; }
+    .event-item {
+        height: auto; min-height: 60px; padding: 0.8rem; flex: none;
     }
-
-    .event-section {
-        flex-direction: column;
+    .event-item.welcome h2, .menu-link {
+        font-size: 1rem; line-height: 1.4; word-wrap: break-word; hyphens: auto;
     }
 }
 
 @media (max-width: 480px) {
-    .header-text h1 {
-        font-size: 1.2rem;
+    .header-text h1 { font-size: 1.2rem; white-space: normal; }
+    .header-text h2 { font-size: 1rem; }
+    .header-text p { font-size: 0.8rem; }
+    .post-titles h2 { font-size: 1.2rem; }
+    .post h3 { font-size: 1rem; }
+    .post p { font-size: 0.8rem; }
+    .event-item.welcome h2, .menu-link { font-size: 0.9rem; }
+    .header-container { min-height: 200px; padding: 1rem; }
+    .menu-toggle {
+        top: 15px; right: 15px; width: 40px; height: 40px; padding: 8px;
     }
-
-    .header-text h2 {
-        font-size: 1rem;
-    }
-
-    .header-text p {
-        font-size: 0.8rem;
-    }
-
-    .menu-item {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .post-titles h2 {
-        font-size: 1.2rem;
-    }
-
-    .post h3 {
-        font-size: 1rem;
-    }
-
-    .post p {
-        font-size: 0.8rem;
-    }
-
-    .event-item.welcome h2 {
-        font-size: 1rem;
-    }
-
-    .menu-link {
-        font-size: 0.9rem;
-    }
-}
-    @media (max-width: 768px) {
-    .header-container {
-        min-height: 180px; /* Tăng chiều cao tối thiểu cho màn hình nhỏ hơn */
-        padding: 1.5rem;
-    }
+    .menu-toggle span { width: 20px; height: 2px; margin: 4px auto; }
+    .menu { width: 250px; }
 }
 
-    @media (max-width: 480px) {
-    .header-container {
-        min-height: 200px; /* Tăng thêm chiều cao tối thiểu cho màn hình rất nhỏ */
-        padding: 1rem;
-    }
-}
+    /* Hiệu ứng chuyển ảnh slider */
+    .main-image { transition: opacity 0.6s ease, transform 0.6s ease; }
+
+    /* Fade */
+    .fade-in { opacity: 0; animation: fadeIn 0.6s forwards; }
+    .fade-out { opacity: 1; animation: fadeOut 0.6s forwards; }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; } }
+
+    /* Slide */
+    .slide-in { transform: translateX(100%); animation: slideIn 0.6s forwards; }
+    .slide-out { transform: translateX(0); animation: slideOut 0.6s forwards; }
+    @keyframes slideIn { to { transform: translateX(0); } }
+    @keyframes slideOut { to { transform: translateX(-100%); opacity: 0; } }
+
+    /* Zoom */
+    .zoom-in { transform: scale(1.3); opacity: 0; animation: zoomIn 0.6s forwards; }
+    .zoom-out { transform: scale(1); opacity: 1; animation: zoomOut 0.6s forwards; }
+    @keyframes zoomIn { to { transform: scale(1); opacity: 1; } }
+    @keyframes zoomOut { to { transform: scale(0.7); opacity: 0; } }
+
+    /* Flip */
+    .flip-in { transform: rotateY(90deg); opacity: 0; animation: flipIn 0.6s forwards; }
+    .flip-out { transform: rotateY(0); opacity: 1; animation: flipOut 0.6s forwards; }
+    @keyframes flipIn { to { transform: rotateY(0); opacity: 1; } }
+    @keyframes flipOut { to { transform: rotateY(-90deg); opacity: 0; } }

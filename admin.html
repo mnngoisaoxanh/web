@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin — Quản lý bài viết</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #e3f2fd; padding: 20px; color: #33475b; }
+    .card { background: #fff; padding: 30px; border-radius: 12px; max-width: 900px; margin: auto; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    h2, h3 { color: #01579b; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; margin-bottom: 20px; }
+    label { font-weight: bold; margin-top: 15px; display: block; margin-bottom: 5px; }
+    input[type="text"], input[type="email"], input[type="password"], .editor {
+        width: 100%; box-sizing: border-box; padding: 12px; margin-top: 4px;
+        border: 1px solid #b0bec5; border-radius: 8px; transition: all 0.3s;
+        font-size: 1rem;
+    }
+    input:focus, .editor:focus { border-color: #0288d1; outline: none; box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.1); }
+    .editor { min-height: 300px; line-height: 1.6; }
+    .toolbar {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+        margin-bottom: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+    .toolbar-group { display: flex; align-items: center; gap: 5px; padding-right: 10px; margin-right: 10px; border-right: 1px solid #ccc; }
+    .toolbar-group:last-child { border-right: none; }
+    .toolbar button, .toolbar input, .toolbar select {
+        padding: 6px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px;
+        display: flex; align-items: center; justify-content: center; font-family: inherit;
+    }
+    .toolbar input[type="color"] { width: 30px; height: 30px; padding: 2px; }
+    .btn { margin-top: 20px; padding: 12px 20px; border: 0; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: background-color 0.3s; }
+    .btn-primary { background: #0288d1; color: #fff; }
+    .btn-primary:hover { background: #0277bd; }
+    .btn-primary:disabled { background: #90caf9; cursor: not-allowed; }
+    .btn-ghost { background: #eceff1; color: #33475b; }
+    .btn-ghost:hover { background: #cfd8dc; }
+    .hidden { display: none; }
+    .post-list { margin-top: 40px; }
+    .post-item {
+        border-bottom: 1px solid #eee; padding: 12px 5px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+        transition: background-color 0.2s;
+    }
+    .post-item:hover { background-color: #f8f9fa; }
+    .post-item.editing { background-color: #e3f2fd; border-left: 4px solid #0288d1; }
+    .post-details { flex-grow: 1; display: flex; flex-direction: column; }
+    .post-title { font-weight: bold; color: #01579b; }
+    .post-meta { font-size: 0.8rem; color: #5a7184; }
+    .post-actions { display: flex; gap: 8px; }
+    .post-actions button { font-size: 0.8rem; padding: 6px 12px; border-radius: 4px; cursor: pointer; border: 1px solid; }
+    .btn-edit { background-color: #e0f7fa; color: #00796b; border-color: #b2ebf2; }
+    .btn-edit:hover { background-color: #b2ebf2; }
+    .btn-delete { background: #fbe9e7; color: #c62828; border-color: #ffcdd2; }
+    .btn-delete:hover { background: #ffcdd2; }
+    .btn-delete:disabled { opacity: 0.5; cursor: not-allowed; }
+    #editor img.selected-image { outline: 3px solid #0288d1; box-shadow: 0 0 10px rgba(2, 136, 209, 0.5); }
+    #imageTools { margin-top: 10px; padding: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; display: flex; align-items: center; gap: 10px; }
+    .loading { color: #666; font-style: italic; }
+    .error { color: #c62828; background: #ffebee; padding: 10px; border-radius: 4px; margin: 10px 0; }
+  </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="card">
+    <!-- Login Section -->
+    <div id="loginBox">
+      <h2>Đăng nhập Quản trị</h2>
+      <label for="email">Email</label><input id="email" type="email">
+      <label for="password">Mật khẩu</label><input id="password" type="password">
+      <button id="btnLogin" class="btn btn-primary">Đăng nhập</button>
+      <div id="loginMsg" class="error" style="margin-top:10px; display:none;"></div>
+    </div>
+
+    <!-- Post Editor Section -->
+    <div id="postBox" class="hidden">
+      <h2 id="form-heading">Soạn thảo bài viết</h2>
+      <form id="postForm">
+        <label for="postTitle">Tiêu đề bài viết</label>
+        <input id="postTitle" type="text" required>
+
+        <label>Nội dung</label>
+        <div class="toolbar">
+          <div class="toolbar-group">
+            <button type="button" onclick="format('bold')" title="In đậm"><b>B</b></button>
+            <button type="button" onclick="format('italic')" title="In nghiêng"><i>I</i></button>
+            <button type="button" onclick="format('underline')" title="Gạch chân"><u>U</u></button>
+          </div>
+          <div class="toolbar-group">
+            <button type="button" onclick="format('justifyLeft')" title="Căn trái">Trái</button>
+            <button type="button" onclick="format('justifyCenter')" title="Căn giữa">Giữa</button>
+            <button type="button" onclick="format('justifyRight')" title="Căn phải">Phải</button>
+            <button type="button" onclick="format('justifyFull')" title="Căn đều">Đều</button>
+          </div>
+          <div class="toolbar-group">
+            <input type="color" id="colorPicker" title="Chọn màu chữ">
+          </div>
+          <div class="toolbar-group">
+            <button type="button" onclick="insertImageURL()" title="Chèn ảnh từ URL">Ảnh URL</button>
+            <input type="file" id="imageUpload" accept="image/*" class="hidden">
+            <button type="button" onclick="document.getElementById('imageUpload').click()" title="Tải ảnh lên">Tải ảnh</button>
+          </div>
+        </div>
+        <div id="editor" class="editor" contenteditable="true"></div>
+
+        <div id="imageTools" class="hidden">
+            <label>Kích thước ảnh:</label>
+            <button type="button" onclick="applyImageSize(25)">25%</button>
+            <button type="button" onclick="applyImageSize(50)">50%</button>
+            <button type="button" onclick="applyImageSize(75)">75%</button>
+            <button type="button" onclick="applyImageSize(100)">100%</button>
+            <input type="number" id="customImageSize" placeholder="%" min="1" max="200" style="width: 60px; margin-left: 10px;">
+            <button type="button" onclick="applyCustomImageSize()" title="Áp dụng kích thước tùy chỉnh">Áp dụng</button>
+        </div>
+
+        <button class="btn btn-primary" type="submit" id="submitBtn">Đăng bài</button>
+        <button type="button" id="cancelEditBtn" class="btn btn-ghost hidden" onclick="cancelEdit()">Hủy sửa</button>
+        <button type="button" id="btnLogout" class="btn btn-ghost">Đăng xuất</button>
+      </form>
+      <div id="status" style="margin-top:10px;font-size:0.9rem;"></div>
+
+      <!-- Post List Section -->
+      <div class="post-list">
+        <h3>Bài viết của bạn</h3>
+        <div id="myPosts"><div class="loading">Vui lòng đăng nhập để xem bài viết.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSZ7-5mr0ll5EP4BHUKC-InnYcu0Th1Tk",
+      authDomain: "baivietwebngoisaoxanh.firebaseapp.com",
+      projectId: "baivietwebngoisaoxanh",
+      appId: "1:38104930715:web:22c85f0b8462e96d47293e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM Elements
+    const loginBox = document.getElementById('loginBox');
+    const postBox = document.getElementById('postBox');
+    const msg = document.getElementById('loginMsg');
+    const statusEl = document.getElementById('status');
+    const editor = document.getElementById('editor');
+    const imageTools = document.getElementById('imageTools');
+    const formHeading = document.getElementById('form-heading');
+    const submitBtn = document.getElementById('submitBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const myPostsEl = document.getElementById('myPosts');
+    const postTitleEl = document.getElementById('postTitle');
+
+    // State variables
+    let selectedImage = null;
+    let editingPostId = null;
+    let currentUser = null;
+    let postsListener = null; // This will hold the unsubscribe function for the listener
+    let isSubmitting = false;
+
+    // Utility functions
+    function showStatus(message, type = 'info', duration = 4000) {
+      statusEl.textContent = message;
+      statusEl.className = type; // 'success', 'error', 'info'
+      if (duration > 0) {
+        setTimeout(() => statusEl.textContent = "", duration);
+      }
+    }
+
+    function showLoginError(message) {
+        msg.textContent = message;
+        msg.style.display = 'block';
+    }
+
+    function slugify(str) {
+      return str.toString().toLowerCase().trim()
+        .replace(/đ/g, 'd')
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-');
+    }
+
+    function highlightEditingPost() {
+      document.querySelectorAll('.post-item').forEach(item => item.classList.remove('editing'));
+      if (editingPostId) {
+        const editingItem = document.querySelector(`[data-post-id="${editingPostId}"]`);
+        if (editingItem) editingItem.classList.add('editing');
+      }
+    }
+
+    // Auth logic
+    document.getElementById('btnLogout').onclick = () => auth.signOut();
+    document.getElementById('btnLogin').onclick = async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (!email || !password) {
+        showLoginError("Vui lòng nhập đầy đủ email và mật khẩu!");
+        return;
+      }
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (e) {
+        showLoginError(e.message);
+      }
+    };
+
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        loginBox.classList.add('hidden');
+        postBox.classList.remove('hidden');
+        msg.style.display = 'none';
+        showStatus(`Chào mừng ${user.email}!`, 'success');
+        initializePostsListener();
+      } else {
+        loginBox.classList.remove('hidden');
+        postBox.classList.add('hidden');
+        cancelEdit();
+        if (postsListener) {
+          postsListener(); // Unsubscribe from the listener
+          postsListener = null;
+        }
+        myPostsEl.innerHTML = '<div class="loading">Vui lòng đăng nhập để xem bài viết.</div>';
+        showStatus('', 'info'); // Clear status
+      }
+    });
+
+    // Realtime Posts Listener - THE CORE OF THE UPGRADE
+    function initializePostsListener() {
+      if (!currentUser || postsListener) return; // Do nothing if no user or listener already active
+      
+      myPostsEl.innerHTML = '<div class="loading">Đang tải bài viết...</div>';
+      
+      postsListener = db.collection('posts')
+        .where('authorUid', '==', currentUser.uid)
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(
+          (snapshot) => {
+            displayPostsFromSnapshot(snapshot);
+          },
+          (error) => {
+            console.error("Lỗi listener thời gian thực:", error);
+            myPostsEl.innerHTML = `<div class="error">Lỗi khi tải bài viết: ${error.message}</div>`;
+          }
+        );
+    }
+
+    function displayPostsFromSnapshot(snapshot) {
+      if (snapshot.empty) {
+        myPostsEl.innerHTML = "<p>Bạn chưa có bài viết nào.</p>";
+        return;
+      }
+      
+      const fragment = document.createDocumentFragment();
+      snapshot.forEach(doc => {
+        fragment.appendChild(createPostItem(doc.id, doc.data()));
+      });
+      
+      myPostsEl.innerHTML = ""; // Clear existing content
+      myPostsEl.appendChild(fragment);
+      
+      highlightEditingPost();
+    }
+
+    function createPostItem(id, data) {
+      const div = document.createElement('div');
+      div.className = "post-item";
+      div.setAttribute('data-post-id', id);
+      
+      const dateStr = data.createdAt?.toDate()?.toLocaleDateString('vi-VN') || "Không rõ";
+
+      div.innerHTML = `
+          <div class="post-details">
+              <span class="post-title">${data.title || 'Không có tiêu đề'}</span>
+              <span class="post-meta">Ngày đăng: ${dateStr}</span>
+          </div>
+          <div class="post-actions">
+              <button class="btn-edit" onclick="editPost('${id}')">Sửa</button>
+              <button class="btn-delete" onclick="deletePost('${id}', event)">Xóa</button>
+          </div>`;
+      return div;
+    }
+
+    // Toolbar functions
+    function format(cmd, value = null) { 
+      document.execCommand(cmd, false, value); 
+      editor.focus(); 
+    }
+    document.getElementById('colorPicker').addEventListener('input', e => format('foreColor', e.target.value));
+    function insertImageURL() {
+      const url = prompt("Nhập URL hình ảnh:");
+      if (url) {
+        format('insertImage', url);
+        // Tự động áp dụng kích thước 50% cho ảnh vừa chèn từ URL
+        setTimeout(() => {
+          const images = editor.querySelectorAll('img');
+          const lastImage = images[images.length - 1];
+          if (lastImage) {
+            lastImage.style.width = '50%';
+            lastImage.style.height = 'auto';
+          }
+        }, 100);
+      }
+    }
+    document.getElementById('imageUpload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          format('insertImage', reader.result);
+          // Tự động áp dụng kích thước 50% cho ảnh vừa chèn
+          setTimeout(() => {
+            const images = editor.querySelectorAll('img');
+            const lastImage = images[images.length - 1];
+            if (lastImage) {
+              lastImage.style.width = '50%';
+              lastImage.style.height = 'auto';
+            }
+          }, 100);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Image tools logic
+    editor.addEventListener('click', (e) => {
+      if (selectedImage) selectedImage.classList.remove('selected-image');
+      if (e.target.tagName === 'IMG') {
+        selectedImage = e.target;
+        selectedImage.classList.add('selected-image');
+        imageTools.classList.remove('hidden');
+      } else {
+        selectedImage = null;
+        imageTools.classList.add('hidden');
+      }
+    });
+    function applyImageSize(widthPercentage) {
+      if (selectedImage) {
+        selectedImage.style.width = widthPercentage + '%';
+        selectedImage.style.height = 'auto';
+      }
+    }
+
+    // Hàm áp dụng kích thước ảnh tùy chỉnh
+    function applyCustomImageSize() {
+      const customSize = document.getElementById('customImageSize').value;
+      if (selectedImage && customSize && customSize > 0 && customSize <= 200) {
+        selectedImage.style.width = customSize + '%';
+        selectedImage.style.height = 'auto';
+        showStatus(`✅ Đã áp dụng kích thước ${customSize}%`, 'success', 2000);
+      } else if (!customSize || customSize <= 0 || customSize > 200) {
+        showStatus('❌ Vui lòng nhập kích thước từ 1% đến 200%', 'error', 3000);
+      }
+    }
+
+    // Submit / Update post
+    document.getElementById('postForm').onsubmit = async e => {
+      e.preventDefault();
+      if (!currentUser || isSubmitting) return;
+      if (!postTitleEl.value.trim()) { 
+        showStatus("Vui lòng nhập tiêu đề!", 'error');
+        return; 
+      }
+      
+      isSubmitting = true;
+      submitBtn.disabled = true;
+      if (selectedImage) selectedImage.classList.remove('selected-image');
+      
+      const postData = {
+        title: postTitleEl.value.trim(),
+        content: editor.innerHTML,
+        slug: slugify(postTitleEl.value),
+        authorUid: currentUser.uid,
+        authorEmail: currentUser.email
+      };
+
+      try {
+        if (editingPostId) {
+          showStatus("Đang cập nhật...", 'info', 0);
+          postData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('posts').doc(editingPostId).update(postData);
+          showStatus("✅ Cập nhật thành công!", 'success');
+          cancelEdit();
+        } else {
+          showStatus("Đang đăng...", 'info', 0);
+          postData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('posts').add(postData);
+          showStatus("✅ Đăng thành công!", 'success');
+          postTitleEl.value = "";
+          editor.innerHTML = "";
+        }
+      } catch (error) {
+        showStatus(`❌ Lỗi: ${error.message}`, 'error');
+      } finally {
+        isSubmitting = false;
+        submitBtn.disabled = false;
+      }
+    };
+
+    // Edit post
+    async function editPost(id) {
+      if (!currentUser) return;
+      try {
+        showStatus("Đang tải bài viết để sửa...", 'info', 0);
+        const doc = await db.collection('posts').doc(id).get();
+        if (!doc.exists || doc.data().authorUid !== currentUser.uid) {
+            showStatus("Bài viết không tồn tại hoặc bạn không có quyền sửa!", 'error');
+            return;
+        }
+        
+        const data = doc.data();
+        editingPostId = id;
+        postTitleEl.value = data.title || '';
+        editor.innerHTML = data.content || '';
+        formHeading.textContent = "Chỉnh sửa bài viết";
+        submitBtn.textContent = "Cập nhật bài viết";
+        cancelEditBtn.classList.remove('hidden');
+        highlightEditingPost();
+        showStatus("✅ Đã tải xong, bạn có thể bắt đầu chỉnh sửa.", 'success');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (error) {
+        showStatus(`❌ Lỗi khi tải bài viết: ${error.message}`, 'error');
+      }
+    }
+
+    // Cancel edit
+    function cancelEdit() {
+      editingPostId = null;
+      postTitleEl.value = '';
+      editor.innerHTML = '';
+      formHeading.textContent = "Soạn thảo bài viết";
+      submitBtn.textContent = "Đăng bài";
+      cancelEditBtn.classList.add('hidden');
+      imageTools.classList.add('hidden');
+      selectedImage = null;
+      highlightEditingPost();
+      statusEl.textContent = "";
+    }
+    
+    // Delete post
+    async function deletePost(id, event) {
+      if (!currentUser || !confirm("Bạn có chắc muốn xóa vĩnh viễn bài này?")) return;
+      
+      const deleteBtn = event.target;
+      deleteBtn.disabled = true;
+      
+      try {
+        const doc = await db.collection('posts').doc(id).get();
+        if (!doc.exists || doc.data().authorUid !== currentUser.uid) {
+            showStatus("Bài viết không tồn tại hoặc bạn không có quyền xóa!", 'error');
+            deleteBtn.disabled = false;
+            return;
+        }
+        await db.collection('posts').doc(id).delete();
+        showStatus("✅ Đã xóa bài viết!", 'success');
+        if (editingPostId === id) cancelEdit();
+      } catch (error) {
+        showStatus(`❌ Lỗi khi xóa: ${error.message}`, 'error');
+        deleteBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -14,42 +14,26 @@
     </script>
     <title>Trường Mầm Non Ngôi Sao Xanh</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Thêm style cho bản đồ và thống kê */
-        .map-container {
-            height: 300px;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-        .statistics {
-            background-color: #fff;
-            padding: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .statistics h3 {
-            font-size: 1.1rem;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        .statistics p {
-            font-size: 0.9rem;
-            color: #666;
-            margin: 0.3rem 0;
-        }
-    </style>
 </head>
 <body>
+    <!-- Nút hamburger và overlay cho mobile -->
+    <button class="menu-toggle" id="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
     <header>
         <div class="header-container">
             <img src="logo.png" alt="Logo Trường Mầm Non Ngôi Sao Xanh" class="logo">
             <div class="header-text">
-                <h1>ỦY BAN NHÂN DÂN QUẬN THANH KHÊ</h1>
+                <h1>PHƯỜNG AN KHÊ - TP ĐÀ NẴNG</h1>
                 <h2>Trường Mầm Non Ngôi Sao Xanh</h2>
-                <p>122 Huỳnh Ngọc Huệ, Q. Thanh Khê, Đà Nẵng<br>Điện thoại: 0236727466 | Email: ngoisaoxanh114@gmail.com </span></a><br><a href="https://www.facebook.com/103755418223477?ref=embed_page" target="_blank">Facebook: Trường Mầm Non Ngôi Sao Xanh</a></p>
+                <p>122 Huỳnh Ngọc Huệ, P. An Khê, Đà Nẵng<br>Điện thoại: 0236727466 | Email: ngoisaoxanh114@gmail.com<br><a href="https://www.facebook.com/103755418223477?ref=embed_page" target="_blank">Facebook: Trường Mầm Non Ngôi Sao Xanh</a></p>
             </div>
         </div>
-        <nav class="menu">
+        <nav class="menu" id="main-menu">
             <a href="#" class="menu-item">Trang chủ</a>
             <a href="lophoc.html" class="menu-item">Lớp Học Của Bé</a>
             <a href="phuhuynhgopy.html" class="menu-item">Góc Phụ Huynh</a>
@@ -63,35 +47,23 @@
         <aside class="sidebar">
             <div class="notification">
                 <h3>Thông Báo Cho Bé</h3>
-                <ul>
-                    <li>Ngày hội Bé Vui Chơi: 05/03/2025</li>
-                    <li>Giờ kể chuyện: 10/03/2025</li>
-                    <li>Bé học làm bánh: 15/03/2025</li>
-                </ul>
+                <ul id="thongBaoBeContent"><li>Đang tải...</li></ul>
             </div>
             <div class="notification">
                 <h3>Thông Báo Cho Phụ Huynh</h3>
-                <ul>
-                    <li>Họp phụ huynh: 08/03/2025</li>
-                    <li>Đăng ký hè 2025: 20/03/2025</li>
-                    <li>Hội thảo dinh dưỡng: 25/03/2025</li>
-                </ul>
+                <ul id="thongBaoPhuHuynhContent"><li>Đang tải...</li></ul>
             </div>
             <div class="notification">
                 <h3>Thông Báo Chung</h3>
-                <p>Đăng ký cấp thẻ Căn cước công dân cho các bé song ngữ tại trường.</p>
+                <p id="thongBaoChungContent">Đang tải...</p>
             </div>
             <div class="notification">
                 <h3>Địa Chỉ Trường</h3>
-                <div class="map-container">
+                <div class="map-container" style="height: 300px; width: 100%; margin-bottom: 1rem;">
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.0845542939505!2d108.18256191033828!3d16.061101484553024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421906ae508f9d%3A0x35f41e293a4d4335!2zVHLGsOG7nW5nIG3huqdtIG5vbiBOZ8O0aSBTYW8gWGFuaA!5e0!3m2!1svi!2s!4v1742953428105!5m2!1svi!2s"
-                        width="100%"
-                        height="100%"
-                        style="border:0;"
-                        allowfullscreen=""
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
+                        width="100%" height="100%" style="border:0;"
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
             </div>
@@ -122,54 +94,145 @@
                 </div>
             </div>
             <div class="post-titles">
-                <h2>Kinh nghiệm chăm sóc trẻ lứa tuổi mầm non</h2>
-                <div class="post-title-container">
-                    <article class="post-title-item">
-                        <span class="post-date">Bài 1</span>
-                        <a href="#">Tạo môi trường an toàn và khuyến khích khám phá</a>
-                    </article>
-                    <article class="post-title-item">
-                        <span class="post-date">Bài 2</span>
-                        <a href="#">Thiết lập lịch trình nhất quán</a>
-                    </article>
-                    <article class="post-title-item">
-                        <span class="post-date">Bài 3</span>
-                        <a href="#">Đọc sách cho trẻ nghe hàng ngày giúp phát triển ngôn ngữ và tư duy</a>
-                    </article>
-                    <article class="post-title-item">
-                        <span class="post-date">Bài 4</span>
-                        <a href="#">Dạy trẻ cách biểu đạt cảm xúc và lắng nghe người khác.</a>
-                    </article>
-                </div>
-            </div>
-            <div class="posts">
-                <article class="post">
-                    <h3>Góc học tập sáng tạo</h3>
-                    <p>Ngày 10/02/2025, các bé tham gia vẽ tranh, làm đồ thủ công và chơi trò chơi giáo dục.</p>
-                </article>
-                <article class="post">
-                    <h3>Ngày hội thể thao vui nhộn</h3>
-                    <p>Ngày 25/05/2025, các bé tham gia chạy đua, nhảy bao bố và thi kéo co, tạo không khí vui tươi.</p>
-                </article>
+                <h2>Các bài viết của trường</h2>
+                <div id="posts" class="post-title-container"></div>
+                <div id="noPosts" style="text-align:center;color:#666">Đang tải...</div>
             </div>
             <div class="event-section">
                 <div class="event-item welcome">
-                    <h2>Chào Mừng Quý Phụ Huynh Thăm Quan Website<br>Chúc những gì tốt đẹp nhất đến với gia đình</h2>
+                    <h2 id="welcomeMessage">Chào Mừng Quý Phụ Huynh Thăm Quan Website<br>Chúc những gì tốt đẹp nhất đến với gia đình</h2>
                 </div>
-                <div class="event-item menu">
-                    <a href="menu.html" class="menu-link">Thực đơn tuần 3 tháng 02-2025</a>
+                <div class="event-item event-menu">
+                    <a href="menu.html" class="menu-link" id="thucDonLink">Đang tải...</a>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>Bản quyền trang website thuộc về Trường Mầm non Ngôi Sao Xanh, 122 Huỳnh Ngọc Huệ, Đà Nẵng.</p>
+        <p>Bản quyền trang website thuộc về Trường Mầm non Ngôi Sao Xanh, 122 Huỳnh Ngọc Huệ, P. An Khê, Đà Nẵng.</p>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="script.js"></script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e777bd98a153af',t:'MTc0MTY1ODUyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script src="analytics-dashboard.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+    <!-- Script tải bài viết và nội dung động -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBSZ7-5mr0ll5EP4BHUKC-InnYcu0Th1Tk",
+        authDomain: "baivietwebngoisaoxanh.firebaseapp.com",
+        projectId: "baivietwebngoisaoxanh",
+        appId: "1:38104930715:web:22c85f0b8462e96d47293e"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // --- Tải bài viết với chức năng Phân trang ---
+      const postsEl = document.getElementById('posts');
+      const noPostsEl = document.getElementById('noPosts');
+      const postsPerPage = 12;
+      let currentPage = 1;
+      let allPosts = [];
+
+      function renderPostsPage(page) {
+          postsEl.innerHTML = '';
+          const start = (page - 1) * postsPerPage;
+          const end = start + postsPerPage;
+          const paginatedPosts = allPosts.slice(start, end);
+
+          paginatedPosts.forEach(post => {
+              const d = post.data;
+              const art = document.createElement('article');
+              art.className = "post-title-item";
+              art.innerHTML = `
+                <span class="post-date">👉 Nhấn vào để xem</span>
+                <a href="post.html?slug=${d.slug}">${d.title || ''}</a>
+              `;
+              postsEl.appendChild(art);
+          });
+          renderPaginationControls();
+      }
+
+      function renderPaginationControls() {
+          const pageCount = Math.ceil(allPosts.length / postsPerPage);
+          const oldControls = document.getElementById('pagination-controls');
+          if (oldControls) oldControls.remove();
+          if (pageCount <= 1) return;
+
+          const controlsContainer = document.createElement('div');
+          controlsContainer.id = 'pagination-controls';
+          controlsContainer.style.cssText = "text-align: center; margin-top: 25px; margin-bottom: 10px;";
+
+          if (currentPage > 1) {
+              const prevButton = document.createElement('button');
+              prevButton.textContent = 'Trang trước';
+              prevButton.onclick = () => { currentPage--; renderPostsPage(currentPage); };
+              prevButton.style.cssText = "margin: 0 5px; padding: 8px 12px; cursor: pointer; border: 1px solid #ccc; background: #f0f0f0; border-radius: 4px;";
+              controlsContainer.appendChild(prevButton);
+          }
+
+          const pageIndicator = document.createElement('span');
+          pageIndicator.textContent = `Trang ${currentPage} / ${pageCount}`;
+          pageIndicator.style.margin = '0 10px';
+          controlsContainer.appendChild(pageIndicator);
+
+          if (currentPage < pageCount) {
+              const nextButton = document.createElement('button');
+              nextButton.textContent = 'Trang sau';
+              nextButton.onclick = () => { currentPage++; renderPostsPage(currentPage); };
+              nextButton.style.cssText = "margin: 0 5px; padding: 8px 12px; cursor: pointer; border: 1px solid #ccc; background: #f0f0f0; border-radius: 4px;";
+              controlsContainer.appendChild(nextButton);
+          }
+          postsEl.parentNode.insertBefore(controlsContainer, postsEl.nextSibling);
+      }
+
+      db.collection('posts').orderBy('createdAt', 'desc')
+        .onSnapshot(snap => {
+          if (snap.empty) {
+            noPostsEl.style.display = 'block';
+            postsEl.innerHTML = '';
+            allPosts = [];
+            noPostsEl.textContent = "Chưa có bài viết nào.";
+            renderPaginationControls();
+            return;
+          }
+          noPostsEl.style.display = 'none';
+          allPosts = snap.docs.map(doc => ({ id: doc.id, data: doc.data() }));
+
+          const pageCount = Math.ceil(allPosts.length / postsPerPage);
+          if (currentPage > pageCount) currentPage = pageCount || 1;
+          
+          renderPostsPage(currentPage);
+        });
+
+      // --- Tải nội dung động cho sidebar và thực đơn ---
+      const thongBaoBeEl = document.getElementById('thongBaoBeContent');
+      const thongBaoPhuHuynhEl = document.getElementById('thongBaoPhuHuynhContent');
+      const thongBaoChungEl = document.getElementById('thongBaoChungContent');
+      const thucDonLinkEl = document.getElementById('thucDonLink');
+      const welcomeMessageEl = document.getElementById('welcomeMessage');
+
+      db.collection('site_content').doc('dynamic_content')
+        .onSnapshot(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            thongBaoBeEl.innerHTML = data.thongBaoBe || 'Chưa có thông báo.';
+            thongBaoPhuHuynhEl.innerHTML = data.thongBaoPhuHuynh || 'Chưa có thông báo.';
+            thongBaoChungEl.textContent = data.thongBaoChung || 'Chưa có thông báo.';
+            thucDonLinkEl.textContent = data.thucDonText || 'Xem thực đơn';
+            thucDonLinkEl.href = data.thucDonLink || '#';
+            if (data.welcomeMessage) {
+              welcomeMessageEl.innerHTML = data.welcomeMessage.replace(/\n/g, '<br>');
+            } else {
+              welcomeMessageEl.innerHTML = 'Chào Mừng Quý Phụ Huynh Thăm Quan Website<br>Chúc những gì tốt đẹp nhất đến với gia đình';
+            }
+          } else {
+            console.log("Không tìm thấy tài liệu cấu hình!");
+          }
+        });
+    </script>
 </body>
 </html>
